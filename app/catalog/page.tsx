@@ -1,7 +1,9 @@
 import Link from "next/link";
 
 import { getVisibleListings } from "@/lib/listings";
-import { Card, EmptyState } from "@/app/_components/ui";
+import { Card, EmptyState, StatusBadge } from "@/app/_components/ui";
+import { isSupabaseConfigured } from "@/lib/env";
+import { categoryLabel } from "@/lib/labels";
 
 /**
  * Catalog page (task 7.2) — the public, role-aware listing grid.
@@ -38,7 +40,7 @@ export default async function CatalogPage() {
         <h1 className="section__title">Catalog</h1>
         <p className="section__lead">
           Browse what we offer. Open a listing to see the details and send us a
-          request — no account needed.
+          request. No account needed.
         </p>
 
         {hasListings ? (
@@ -57,8 +59,10 @@ export default async function CatalogPage() {
                   />
                   <h2 className="card__title">{listing.title}</h2>
                   <p className="card__meta">
-                    {listing.category} · {listing.inquiry_type}
-                    {listing.is_published ? null : " · Unpublished"}
+                    {categoryLabel(listing.category)}{" "}
+                    {listing.is_published ? null : (
+                      <StatusBadge status="DRAFT" />
+                    )}
                   </p>
                 </Card>
               </li>
@@ -67,8 +71,9 @@ export default async function CatalogPage() {
         ) : (
           <div className="stack-6">
             <EmptyState title="No listings yet">
-              There are no published listings to show right now. Once listings
-              are published they appear here.
+              {isSupabaseConfigured()
+                ? "Your database has no published listings yet. Open /setup on this site, copy the SQL it shows, and run it in the Supabase SQL Editor."
+                : "Add your listings to content/listings.ts and save the file. They show up here."}
             </EmptyState>
           </div>
         )}

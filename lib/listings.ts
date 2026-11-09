@@ -19,8 +19,13 @@
 
 import "server-only";
 
+import { isSupabaseConfigured } from "@/lib/env";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import type { InquiryType, ListingCategory } from "@/content/listings";
+import {
+  listings as contentListings,
+  type InquiryType,
+  type ListingCategory,
+} from "@/content/listings";
 
 /**
  * A listing row as returned from the `listings` table (db/schema.sql). The
@@ -39,6 +44,24 @@ export interface DbListing {
   created_at: string;
 }
 
+/**
+ * Session 1 fallback: before Supabase is connected, the catalog shows the
+ * listings from content/listings.ts so students see their edits right away.
+ * The slug stands in for the database id in the page address.
+ */
+function listingsFromContentFile(): DbListing[] {
+  return contentListings.map((l) => ({
+    id: l.slug,
+    title: l.title,
+    category: l.category,
+    description: l.description,
+    inquiry_type: l.inquiry_type,
+    image_url: l.image_url,
+    is_published: true,
+    created_at: "",
+  }));
+}
+
 /** The columns the catalog/detail views need, selected explicitly. */
 const LISTING_COLUMNS =
   "id, title, category, description, inquiry_type, image_url, is_published, created_at";
@@ -53,6 +76,10 @@ const LISTING_COLUMNS =
  * (Requirement 14.5).
  */
 export async function getVisibleListings(): Promise<DbListing[]> {
+  if (!isSupabaseConfigured()) {
+    return listingsFromContentFile();
+  }
+
   const supabase = createServerSupabaseClient();
 
   const { data, error } = await supabase
@@ -79,6 +106,16 @@ export async function getVisibleListings(): Promise<DbListing[]> {
  * (Requirements 3.1–3.3). Staff/Admin can retrieve unpublished listings.
  */
 export async function getListingById(id: string): Promise<DbListing | null> {
+  if (!isSupabaseConfigured()) {
+    return listingsFromContentFile().find((l) => l.id === id) ?? null;
+  }
+
+  // Database ids are UUIDs. Anything else (e.g. an old Session 1 slug link)
+  // cannot match, so answer "not found" instead of sending a bad query.
+  if (!/^[0-9a-f-]{36}$/i.test(id)) {
+    return null;
+  }
+
   const supabase = createServerSupabaseClient();
 
   const { data, error } = await supabase

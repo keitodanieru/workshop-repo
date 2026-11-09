@@ -111,7 +111,15 @@ drop policy if exists inquiries_insert on public.inquiries;
 create policy inquiries_insert
   on public.inquiries
   for insert
-  with check (true);
+  with check (
+    status = 'NEW'
+    and handled_by is null
+    and (owner_id is null or owner_id = auth.uid())
+    and exists (
+      select 1 from public.listings l
+      where l.id = listing_id and l.is_published
+    )
+  );
 
 -- Read: owner (authenticated USER) sees own; STAFF/ADMIN see all.
 -- Anonymous / non-owning USERs are denied (owner_id = auth.uid() is false/null).
@@ -152,6 +160,8 @@ create policy membership_receipts_insert
   with check (
     user_id = auth.uid()
     and status = 'PENDING'
+    and reviewed_by is null
+    and review_note is null
   );
 
 -- Read: owning USER sees own; STAFF/ADMIN see all.
@@ -190,7 +200,11 @@ drop policy if exists donations_insert on public.donations;
 create policy donations_insert
   on public.donations
   for insert
-  with check (true);
+  with check (
+    status = 'PENDING'
+    and reviewed_by is null
+    and review_note is null
+  );
 
 -- Read: STAFF/ADMIN only (donations carry no owner; anon/USER get nothing).
 drop policy if exists donations_read on public.donations;
@@ -230,6 +244,7 @@ create policy profiles_read
   using (
     id = auth.uid()
     or public.current_user_role() = 'ADMIN'
+    or public.current_user_role() = 'STAFF'
   );
 
 -- Update: ADMIN only (role assignment). The server performs role changes with
@@ -241,6 +256,33 @@ create policy profiles_update
   for update
   using (public.current_user_role() = 'ADMIN')
   with check (public.current_user_role() = 'ADMIN');
+
+
+-- ===== storage.objects (the private `receipts` bucket) ======================
+-- Supabase Storage blocks every upload and read until a policy allows it.
+-- Upload: anyone may add a NEW file to the receipts bucket (donations are
+-- anonymous). The app validates type/size first, and the bucket itself caps
+-- size and file types. Upload never needs read access (upsert is off).
+-- Read (needed to mint a signed URL): STAFF/ADMIN only, so a receipt is never
+-- readable by the person who uploaded it or by the public.
+drop policy if exists receipts_objects_insert on storage.objects;
+create policy receipts_objects_insert
+  on storage.objects
+  for insert
+  to anon, authenticated
+  with check (
+    bucket_id = 'receipts'
+    and name like 'receipts/%'
+  );
+
+drop policy if exists receipts_objects_read on storage.objects;
+create policy receipts_objects_read
+  on storage.objects
+  for select
+  using (
+    bucket_id = 'receipts'
+    and public.current_user_role() in ('STAFF', 'ADMIN')
+  );
 
 
 -- ============================================================================

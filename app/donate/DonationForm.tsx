@@ -162,7 +162,7 @@ export function DonationForm() {
         {submit.phase === "success" ? (
           <Feedback tone="success">
             Thank you! Your donation was recorded. Status:{" "}
-            <StatusBadge status="PENDING" /> — we&apos;ll verify it shortly.
+            <StatusBadge status="PENDING" />. We&apos;ll verify it shortly.
           </Feedback>
         ) : null}
         {submit.phase === "error" ? (

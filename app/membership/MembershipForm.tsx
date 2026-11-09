@@ -162,7 +162,7 @@ export function MembershipForm() {
             You&apos;re a member <StatusBadge status="APPROVED" />
           </h2>
           <p className="muted">
-            Your membership is active. Thanks for supporting us — there&apos;s
+            Your membership is active. Thanks for supporting us. There&apos;s
             nothing more to upload.
           </p>
         </div>
@@ -214,7 +214,7 @@ export function MembershipForm() {
 
         {submit.phase === "success" ? (
           <Feedback tone="success">
-            Receipt submitted. Status: <StatusBadge status="PENDING" /> — a
+            Receipt submitted. Status: <StatusBadge status="PENDING" />. A
             reviewer will verify it shortly.
           </Feedback>
         ) : null}

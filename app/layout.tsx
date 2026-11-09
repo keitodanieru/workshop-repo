@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <SiteNav />
-        <main>{children}</main>
+        <main id="main">{children}</main>
         <footer className="site-footer">
           <div className="container">
             © {new Date().getFullYear()} {site.name}

@@ -32,6 +32,7 @@
 
 import "server-only";
 
+import { isSupabaseConfigured } from "@/lib/env";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 /**
@@ -67,6 +68,11 @@ export type RoleResolution =
  * usable role rather than silently granting one).
  */
 export async function getRoleFromSession(): Promise<RoleResolution> {
+  // Before Session 2 there is no Supabase project, so nobody can be signed in.
+  if (!isSupabaseConfigured()) {
+    return { authenticated: false };
+  }
+
   const supabase = createServerSupabaseClient();
 
   // Verify the JWT (signature + expiry) via the Auth server. Invalid/expired

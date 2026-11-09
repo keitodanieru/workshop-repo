@@ -2,7 +2,9 @@ import Link from "next/link";
 
 import { getListingById } from "@/lib/listings";
 import { InquiryForm } from "@/app/_components/InquiryForm";
-import { EmptyState, ButtonLink } from "@/app/_components/ui";
+import { EmptyState, ButtonLink, StatusBadge } from "@/app/_components/ui";
+import { isSupabaseConfigured } from "@/lib/env";
+import { categoryLabel } from "@/lib/labels";
 
 /**
  * Listing detail page (task 7.3) — one listing + its matching inquiry form.
@@ -70,8 +72,8 @@ export default async function ListingDetailPage({
           />
           <h1 className="section__title">{listing.title}</h1>
           <p className="card__meta">
-            {listing.category}
-            {listing.is_published ? null : " · Unpublished"}
+            {categoryLabel(listing.category)}{" "}
+            {listing.is_published ? null : <StatusBadge status="DRAFT" />}
           </p>
           <p>{listing.description}</p>
         </article>
@@ -80,6 +82,7 @@ export default async function ListingDetailPage({
           <InquiryForm
             listingId={listing.id}
             inquiryType={listing.inquiry_type}
+            backendReady={isSupabaseConfigured()}
           />
         </div>
       </div>

@@ -95,7 +95,7 @@ describe("Property 1: membership is only granted by approval", () => {
     // the DbProfile type, not in any update payload).
     const adminUsers = readSql("lib/admin-users.ts");
     expect(adminUsers).toMatch(/\.update\(\{\s*role:/);
-    expect(adminUsers).not.toMatch(/\.update\([^)]*membership_status/s);
+    expect(adminUsers).not.toMatch(/\.update\([^)]*membership_status/);
     // No application source outside the approval RPC writes membership_status.
     for (const rel of [
       "lib/membership.ts",
@@ -103,7 +103,7 @@ describe("Property 1: membership is only granted by approval", () => {
       "lib/donations.ts",
     ]) {
       expect(readSql(rel)).not.toMatch(
-        /\.update\([^)]*membership_status[^)]*\)/s,
+        /\.update\([^)]*membership_status[^)]*\)/,
       );
     }
   });

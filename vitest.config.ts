@@ -32,5 +32,11 @@ export default defineConfig({
     environment: "node",
     include: ["tests/**/*.test.ts"],
     globals: false,
+    // Placeholder values so the app code treats Supabase as "configured".
+    // The tests swap in a fake Supabase client, so nothing is ever contacted.
+    env: {
+      NEXT_PUBLIC_SUPABASE_URL: "http://supabase.test",
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: "test-anon-key",
+    },
   },
 });

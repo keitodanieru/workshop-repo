@@ -15,7 +15,9 @@ export type RecordStatus =
   | "NEW"
   | "IN_PROGRESS"
   | "CLOSED"
-  | "VERIFIED";
+  | "VERIFIED"
+  | "PUBLISHED"
+  | "DRAFT";
 
 const LABELS: Record<RecordStatus, string> = {
   PENDING: "Pending",
@@ -25,6 +27,8 @@ const LABELS: Record<RecordStatus, string> = {
   IN_PROGRESS: "In progress",
   CLOSED: "Closed",
   VERIFIED: "Verified",
+  PUBLISHED: "Published",
+  DRAFT: "Draft",
 };
 
 export function StatusBadge({ status }: { status: RecordStatus }) {

@@ -86,3 +86,14 @@ export function requireServiceRoleKey(): string {
   }
   return key;
 }
+
+/**
+ * True once the two public Supabase values are set (Session 2 onward).
+ *
+ * In Session 1 there is no database yet. Pages use this to fall back to the
+ * content files (the catalog reads content/listings.ts) and to show a short
+ * "this starts working after Session 2" note instead of crashing.
+ */
+export function isSupabaseConfigured(): boolean {
+  return Boolean(publicEnv.SUPABASE_URL && publicEnv.SUPABASE_ANON_KEY);
+}

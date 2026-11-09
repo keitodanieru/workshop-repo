@@ -22,6 +22,9 @@
  * Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 6.3, 14.2, 14.6
  */
 
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 /**
@@ -31,7 +34,9 @@ import { createServerSupabaseClient } from "@/lib/supabase/server";
  * established, or session terminated). `ok: false` carries a safe, generic
  * error message suitable for display — never an internal diagnostic.
  */
-export type AuthResult = { ok: true } | { ok: false; error: string };
+export type AuthResult =
+  | { ok: true; needsEmailConfirmation?: boolean }
+  | { ok: false; error: string };
 
 /**
  * Registers a new account via Supabase Auth (Requirement 5.1).
@@ -48,14 +53,22 @@ export async function register(
 ): Promise<AuthResult> {
   const supabase = createServerSupabaseClient();
 
-  const { error } = await supabase.auth.signUp({ email, password });
+  // If "Confirm email" is still on in Supabase, the link in the email comes
+  // back to /auth/callback on THIS site (not localhost).
+  const origin = headers().get("origin") ?? "";
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: origin ? { emailRedirectTo: `${origin}/auth/callback` } : undefined,
+  });
 
   if (error) {
     // Generic message; do not echo provider internals (Requirement 14.6).
     return { ok: false, error: "Registration failed. Please try again." };
   }
 
-  return { ok: true };
+  // No session yet means Supabase is waiting for the user to confirm by email.
+  return { ok: true, needsEmailConfirmation: !data.session };
 }
 
 /**
@@ -92,4 +105,13 @@ export async function logout(): Promise<AuthResult> {
   }
 
   return { ok: true };
+}
+
+/**
+ * Sign-out for a plain <form action={signOutAction}> in the navigation.
+ * Ends the session, then sends the user to the home page.
+ */
+export async function signOutAction(): Promise<void> {
+  await logout();
+  redirect("/");
 }

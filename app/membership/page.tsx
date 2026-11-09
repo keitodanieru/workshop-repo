@@ -1,4 +1,6 @@
 import { PaymentInfoPanel } from "@/app/_components/PaymentInfoPanel";
+import { EmptyState } from "@/app/_components/ui";
+import { isSupabaseConfigured } from "@/lib/env";
 import { MembershipForm } from "./MembershipForm";
 
 /**
@@ -29,7 +31,14 @@ export default function MembershipPage() {
 
         <div className="two-col">
           <PaymentInfoPanel endpoint="/api/membership/payment-info" />
-          <MembershipForm />
+          {isSupabaseConfigured() ? (
+            <MembershipForm />
+          ) : (
+            <EmptyState title="Not connected yet">
+              Receipt upload starts working after you connect your Supabase project in
+              Session 2. You can already check your GCash details here.
+            </EmptyState>
+          )}
         </div>
       </div>
     </section>

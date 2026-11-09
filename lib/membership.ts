@@ -35,7 +35,7 @@ export type MembershipStatus = "MEMBER" | "NON_MEMBER";
  */
 export type SubmitReceiptResult =
   | { ok: true; status: 201; receiptStatus: "PENDING" }
-  | { ok: false; status: 400 | 401 | 500; error: string };
+  | { ok: false; status: 400 | 401 | 409 | 500; error: string };
 
 /**
  * Submits a membership receipt for the authenticated User (Flow 2).
@@ -86,6 +86,15 @@ export async function submitMembershipReceipt(
     });
 
     if (error) {
+      // 23505 = the database's "one PENDING receipt per user" rule.
+      if (error.code === "23505") {
+        return {
+          ok: false,
+          status: 409,
+          error:
+            "You already have a receipt waiting for review. Please wait for a reviewer to check it.",
+        };
+      }
       return {
         ok: false,
         status: 500,

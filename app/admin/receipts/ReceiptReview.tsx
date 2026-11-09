@@ -135,7 +135,7 @@ export function ReceiptReview({
                     </a>
                   ) : (
                     <span className="cell-muted">
-                      Receipt link unavailable — reload to retry.
+                      Receipt link unavailable. Reload the page to try again.
                     </span>
                   )}
                 </div>

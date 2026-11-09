@@ -86,9 +86,12 @@ type Status =
 export function InquiryForm({
   listingId,
   inquiryType,
+  backendReady = true,
 }: {
   listingId: string;
   inquiryType: InquiryType;
+  /** False before Supabase is connected (Session 1): the form can't save yet. */
+  backendReady?: boolean;
 }) {
   const copy = COPY[inquiryType];
   const [status, setStatus] = useState<Status>({ kind: "idle" });
@@ -147,7 +150,7 @@ export function InquiryForm({
     return (
       <Feedback tone="success">
         <span>{copy.success}</span>
-        <span className="muted">Reference: {status.inquiryId}</span>
+        <span>We&apos;ll reply to the email address you gave us.</span>
       </Feedback>
     );
   }
@@ -156,6 +159,15 @@ export function InquiryForm({
     <form onSubmit={onSubmit} noValidate>
       <h2 className="section__title">{copy.heading}</h2>
       <p className="section__lead">{copy.lead}</p>
+
+      {backendReady ? null : (
+        <div className="stack-4">
+          <Feedback tone="info">
+            This form starts saving requests after you connect your database
+            in Session 2.
+          </Feedback>
+        </div>
+      )}
 
       {status.kind === "error" && status.message ? (
         <div className="stack-4">
@@ -166,7 +178,7 @@ export function InquiryForm({
       <div className="stack-4">
         <FormRow
           actions={
-            <Button type="submit" disabled={submitting}>
+            <Button type="submit" disabled={submitting || !backendReady}>
               {submitting ? "Sending…" : copy.submitLabel}
             </Button>
           }

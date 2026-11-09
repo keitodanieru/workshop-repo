@@ -205,6 +205,11 @@ create index if not exists idx_membership_receipts_user_id     on public.members
 create index if not exists idx_membership_receipts_reviewed_by on public.membership_receipts (reviewed_by);
 create index if not exists idx_donations_reviewed_by           on public.donations (reviewed_by);
 
+-- One PENDING receipt per user at a time (a second upload waits for review).
+create unique index if not exists uniq_membership_receipts_one_pending
+  on public.membership_receipts (user_id)
+  where status = 'PENDING';
+
 
 -- ============================================================================
 -- NOTE: Row Level Security is intentionally NOT defined in this file.
