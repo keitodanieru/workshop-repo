@@ -88,12 +88,28 @@ export function requireServiceRoleKey(): string {
 }
 
 /**
- * True once the two public Supabase values are set (Session 2 onward).
+ * True once real Supabase values are set (Session 2 onward).
  *
  * In Session 1 there is no database yet. Pages use this to fall back to the
  * content files (the catalog reads content/listings.ts) and to show a short
  * "this starts working after Session 2" note instead of crashing.
+ *
+ * Placeholder values copied from .env.example (like YOUR-PROJECT-REF) count as
+ * "not set up yet", so copying the template early doesn't break the site.
  */
 export function isSupabaseConfigured(): boolean {
-  return Boolean(publicEnv.SUPABASE_URL && publicEnv.SUPABASE_ANON_KEY);
+  const url = (publicEnv.SUPABASE_URL ?? "").trim();
+  const key = (publicEnv.SUPABASE_ANON_KEY ?? "").trim();
+  if (!url || !key) return false;
+  if (/YOUR-PROJECT-REF/i.test(url) || /^your-/i.test(key)) return false;
+  try {
+    const parsed = new URL(url);
+    return (
+      parsed.protocol === "https:" ||
+      parsed.hostname === "localhost" ||
+      parsed.hostname === "127.0.0.1"
+    );
+  } catch {
+    return false;
+  }
 }

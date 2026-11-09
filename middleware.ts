@@ -6,18 +6,20 @@
  * needed, and saves it in the cookie. Without it, people get signed out
  * partway through a workshop session.
  *
- * Before Session 2 there are no Supabase keys, so it does nothing.
+ * Before Session 2 there are no real Supabase keys, so it does nothing.
  */
 
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+import { isSupabaseConfigured } from "@/lib/env";
+
 export async function middleware(request: NextRequest) {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !anonKey) {
+  if (!isSupabaseConfigured()) {
     return NextResponse.next();
   }
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
 
   let response = NextResponse.next({ request });
 
