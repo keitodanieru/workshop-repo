@@ -23,11 +23,13 @@
 --   * DROP TRIGGER / DROP POLICY IF EXISTS before each CREATE
 --   * ALTER TABLE ... ENABLE ROW LEVEL SECURITY (a no-op if already enabled)
 --
+-- It also creates the PRIVATE `receipts` Storage bucket and the storage
+-- policies that let the app upload receipts and let Staff/Admin view them.
+--
 -- WHAT THIS FILE DOES NOT DO (deliberately, separate student steps):
---   * It does NOT create the private `receipts` Storage bucket — that is a
---     manual Storage step (Session 2, Step 3): create a bucket named exactly
---     `receipts` with Public turned OFF.
---   * It does NOT seed listings — run db/seed.sql (Session 2, Step 4).
+--   * It does NOT seed listings. Open /setup on your site and copy the SQL it
+--     shows (built from your content/listings.ts), or run db/seed.sql for the
+--     sample listings (Session 2, Step 3).
 --   * It does NOT assign roles — run db/seed-roles.sql after registering your
 --     accounts (Session 3, Step 1).
 --
@@ -208,6 +210,23 @@ create index if not exists idx_membership_receipts_user_id     on public.members
 create index if not exists idx_membership_receipts_reviewed_by on public.membership_receipts (reviewed_by);
 create index if not exists idx_donations_reviewed_by           on public.donations (reviewed_by);
 
+-- One PENDING receipt per user at a time (a second upload waits for review).
+create unique index if not exists uniq_membership_receipts_one_pending
+  on public.membership_receipts (user_id)
+  where status = 'PENDING';
+
+-- ----------------------------------------------------------------------------
+-- Storage bucket: the PRIVATE `receipts` bucket. Created here so nobody has to
+-- type the name or remember to keep it private. Re-running keeps it private.
+-- 10 MiB cap and image/PDF only, matching lib/storage/receipts.ts.
+-- ----------------------------------------------------------------------------
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('receipts', 'receipts', false, 10485760, array['image/*', 'application/pdf'])
+on conflict (id) do update
+  set public = false,
+      file_size_limit = excluded.file_size_limit,
+      allowed_mime_types = excluded.allowed_mime_types;
+
 
 -- ############################################################################
 -- PART 2 — ROW LEVEL SECURITY (from db/rls.sql)
@@ -270,7 +289,15 @@ drop policy if exists inquiries_insert on public.inquiries;
 create policy inquiries_insert
   on public.inquiries
   for insert
-  with check (true);
+  with check (
+    status = 'NEW'
+    and handled_by is null
+    and (owner_id is null or owner_id = auth.uid())
+    and exists (
+      select 1 from public.listings l
+      where l.id = listing_id and l.is_published
+    )
+  );
 
 drop policy if exists inquiries_read on public.inquiries;
 create policy inquiries_read
@@ -301,6 +328,8 @@ create policy membership_receipts_insert
   with check (
     user_id = auth.uid()
     and status = 'PENDING'
+    and reviewed_by is null
+    and review_note is null
   );
 
 drop policy if exists membership_receipts_read on public.membership_receipts;
@@ -329,7 +358,11 @@ drop policy if exists donations_insert on public.donations;
 create policy donations_insert
   on public.donations
   for insert
-  with check (true);
+  with check (
+    status = 'PENDING'
+    and reviewed_by is null
+    and review_note is null
+  );
 
 drop policy if exists donations_read on public.donations;
 create policy donations_read
@@ -358,6 +391,7 @@ create policy profiles_read
   using (
     id = auth.uid()
     or public.current_user_role() = 'ADMIN'
+    or public.current_user_role() = 'STAFF'
   );
 
 drop policy if exists profiles_update on public.profiles;
@@ -366,6 +400,33 @@ create policy profiles_update
   for update
   using (public.current_user_role() = 'ADMIN')
   with check (public.current_user_role() = 'ADMIN');
+
+
+-- ===== storage.objects (the private `receipts` bucket) ======================
+-- Supabase Storage blocks every upload and read until a policy allows it.
+-- Upload: anyone may add a NEW file to the receipts bucket (donations are
+-- anonymous). The app validates type/size first, and the bucket itself caps
+-- size and file types. Upload never needs read access (upsert is off).
+-- Read (needed to mint a signed URL): STAFF/ADMIN only, so a receipt is never
+-- readable by the person who uploaded it or by the public.
+drop policy if exists receipts_objects_insert on storage.objects;
+create policy receipts_objects_insert
+  on storage.objects
+  for insert
+  to anon, authenticated
+  with check (
+    bucket_id = 'receipts'
+    and name like 'receipts/%'
+  );
+
+drop policy if exists receipts_objects_read on storage.objects;
+create policy receipts_objects_read
+  on storage.objects
+  for select
+  using (
+    bucket_id = 'receipts'
+    and public.current_user_role() in ('STAFF', 'ADMIN')
+  );
 
 
 -- ############################################################################
@@ -427,7 +488,6 @@ $$;
 
 -- ============================================================================
 -- DONE. Next steps (separate, manual):
---   * Storage: create a PRIVATE bucket named exactly `receipts` (Public OFF).
---   * Run db/seed.sql to insert sample listings.
+--   * Load your listings: copy the SQL from /setup on your site (or db/seed.sql).
 --   * Register your accounts, then run db/seed-roles.sql to set Admin/Staff.
 -- ============================================================================

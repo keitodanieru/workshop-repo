@@ -14,6 +14,7 @@ import {
 } from "@/app/_components/ui";
 import type { DbListing } from "@/lib/listings";
 import type { InquiryType, ListingCategory } from "@/content/listings";
+import { categoryLabel, inquiryTypeLabel } from "@/lib/labels";
 
 /**
  * ListingManager — create / edit / publish listings (task 9.4, Requirement 15).
@@ -158,11 +159,11 @@ function ListingRow({
       <div className="stack-3">
         <div className="review-card__head">
           <span className="cell-strong">{listing.title}</span>
-          <StatusBadge status={listing.is_published ? "APPROVED" : "PENDING"} />
+          <StatusBadge status={listing.is_published ? "PUBLISHED" : "DRAFT"} />
         </div>
         <div className="cell-muted">
-          {listing.category} · {listing.inquiry_type} ·{" "}
-          {listing.is_published ? "Published" : "Unpublished"}
+          {categoryLabel(listing.category)} ·{" "}
+          {inquiryTypeLabel(listing.inquiry_type)}
         </div>
 
         {error ? <Feedback tone="error">{error}</Feedback> : null}

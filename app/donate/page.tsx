@@ -1,4 +1,6 @@
 import { PaymentInfoPanel } from "@/app/_components/PaymentInfoPanel";
+import { EmptyState } from "@/app/_components/ui";
+import { isSupabaseConfigured } from "@/lib/env";
 import { DonationForm } from "./DonationForm";
 
 /**
@@ -24,12 +26,19 @@ export default function DonatePage() {
         <h1 className="section__title">Support us with a donation</h1>
         <p className="section__lead">
           Every gift helps. Pay via GCash, enter the amount, and upload your
-          receipt. You can donate anonymously — no account needed.
+          receipt. You can donate anonymously. No account needed.
         </p>
 
         <div className="two-col">
           <PaymentInfoPanel endpoint="/api/donations/payment-info" />
-          <DonationForm />
+          {isSupabaseConfigured() ? (
+            <DonationForm />
+          ) : (
+            <EmptyState title="Not connected yet">
+              Donations starts working after you connect your Supabase project in
+              Session 2. You can already check your GCash details here.
+            </EmptyState>
+          )}
         </div>
       </div>
     </section>

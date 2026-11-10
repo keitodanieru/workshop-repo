@@ -56,10 +56,10 @@ Maps to [Session 2 Reference](./Session-2-Setup-Reference.md). Goal: the student
 | 12:40 to 1:00 | Recap and how the backend fits (DB, Auth, Storage, RLS). Keep it brief |  |
 | 1:00 to 1:30 | Create Supabase project. Run `db/setup.sql` | Steps 1 to 2 |
 | 1:30 to 1:40 | **Break 1** |  |
-| 1:40 to 2:10 | Create private `receipts` bucket. Run `db/seed.sql` | Steps 3 to 4 |
+| 1:40 to 2:10 | Load listings via `/setup` (or `db/seed.sql`). Turn off "Confirm email" | Steps 3 to 4 |
 | 2:10 to 2:40 | Copy keys. Set `.env.local` and Vercel env. Redeploy | Steps 5 to 6 |
 | 2:40 to 2:50 | **Break 2** |  |
-| 2:50 to 3:30 | Customize payment (`content/payment.ts` and `gcash-qr.png`). Test flows | Steps 3b and 7 |
+| 2:50 to 3:30 | Add GCash QR (`gcash-qr.png`, `content/payment.ts`). Save test data: 1 inquiry, 2 receipts from 2 accounts, 2 donations | Steps 7 to 8 |
 | 3:30 to 4:00 | **Checkpoint:** test inquiry, receipt, and donation persist. Q&A and buffer | Session 2 checklist |
 
 **Risk and buffer (read this one closely):**

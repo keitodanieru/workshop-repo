@@ -111,8 +111,8 @@
 .card--interactive {
   display: block;
   color: inherit;
-  transition: border-color var(--transition), box-shadow var(--transition),
-    transform var(--transition);
+  text-decoration: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
 }
 .card--interactive:hover {
   text-decoration: none;
@@ -162,7 +162,7 @@
 }
 
 .field__required {
-  color: var(--accent);
+  color: var(--link);
   margin-left: 2px;
 }
 
@@ -171,7 +171,7 @@
   font-size: var(--text-base);
   color: var(--text);
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-input);
   border-radius: var(--radius-sm);
   padding: var(--space-3) var(--space-3);
   width: 100%;
@@ -183,7 +183,7 @@
 }
 
 .field__control:hover:not(:disabled) {
-  border-color: var(--border-strong);
+  border-color: var(--muted);
 }
 
 .field__control:focus-visible {
@@ -306,6 +306,15 @@
 .badge--verified {
   background: var(--status-verified-bg);
   color: var(--status-verified-fg);
+}
+/* Listing states reuse existing status colors (no new hues). */
+.badge--published {
+  background: var(--status-approved-bg);
+  color: var(--status-approved-fg);
+}
+.badge--draft {
+  background: var(--status-closed-bg);
+  color: var(--status-closed-fg);
 }
 
 /* ============================================================= Loading */
@@ -469,6 +478,8 @@
 
 .table {
   width: 100%;
+  /* Keep columns readable on phones: the wrapper scrolls sideways instead. */
+  min-width: 720px;
   border-collapse: collapse;
   font-size: var(--text-sm);
 }
@@ -504,9 +515,11 @@
 
 /* Free-text inquiry details: wrap and cap width so the column stays readable. */
 .cell-details {
+  min-width: 24ch;
   max-width: 36ch;
   white-space: pre-wrap;
-  word-break: break-word;
+  /* Break only words too long to fit (e.g. a pasted URL), never normal words. */
+  overflow-wrap: break-word;
 }
 
 .cell-actions {
@@ -534,6 +547,8 @@
 
 .filter-chip {
   display: inline-flex;
+  font-family: inherit;
+  cursor: pointer;
   align-items: center;
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-pill);

@@ -31,6 +31,8 @@ type State =
 
 export function PaymentInfoPanel({ endpoint }: { endpoint: string }) {
   const [state, setState] = useState<State>({ phase: "loading" });
+  // Bumped by "Try again" so the fetch below runs again.
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     let active = true;
@@ -57,8 +59,8 @@ export function PaymentInfoPanel({ endpoint }: { endpoint: string }) {
     return () => {
       active = false;
     };
-    // Re-run only when the endpoint changes.
-  }, [endpoint]);
+    // Re-run when the endpoint changes or the user presses "Try again".
+  }, [endpoint, attempt]);
 
   if (state.phase === "loading") {
     // Loading state (Requirement 15.6): skeletons stand in for the QR + text.
@@ -87,13 +89,13 @@ export function PaymentInfoPanel({ endpoint }: { endpoint: string }) {
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => setState({ phase: "loading" })}
+            onClick={() => setAttempt((n) => n + 1)}
           >
             Try again
           </Button>
         }
       >
-        Refresh the page to try again. You can still fill in the form below.
+        Check your connection and try again. You can still fill in the form.
       </ErrorState>
     );
   }

@@ -114,9 +114,14 @@ export async function POST(request: Request): Promise<NextResponse> {
   const ownerId = resolution.authenticated ? resolution.userId : null;
 
   // --- 3. Sanitize free text (4.6) and insert with status NEW (4.2). ---
-  const { data: inserted, error: insertError } = await supabase
+  // The id is created here instead of read back after the insert. Reading the
+  // row back would need SELECT access, and RLS (correctly) does not let an
+  // anonymous visitor read inquiries. So we never ask for the row back.
+  const inquiryId = crypto.randomUUID();
+  const { error: insertError } = await supabase
     .from("inquiries")
     .insert({
+      id: inquiryId,
       listing_id: listingId,
       owner_id: ownerId,
       customer_name: sanitizeText(name),
@@ -124,16 +129,14 @@ export async function POST(request: Request): Promise<NextResponse> {
       customer_phone: phone ? sanitizeText(phone) : null,
       project_details: sanitizeText(details),
       status: "NEW",
-    })
-    .select("id")
-    .single();
+    });
 
-  if (insertError || !inserted) {
+  if (insertError) {
     return NextResponse.json(
       { error: "Something went wrong. Please try again." },
       { status: 500 },
     );
   }
 
-  return NextResponse.json({ inquiryId: inserted.id }, { status: 201 });
+  return NextResponse.json({ inquiryId }, { status: 201 });
 }
