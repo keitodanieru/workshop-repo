@@ -1,10 +1,18 @@
 # Facilitator Timing Guide
 
-Run-of-show for all three sessions. Each day runs **12:30 to 4:00 PM (210 minutes)**. This guide maps the student reference docs to time blocks, places breaks, and leaves buffer. It's for facilitators. Students follow their own session reference docs.
+Run-of-show for all three sessions. Each day runs **12:30 to 4:00 PM (210 minutes)**. This guide maps the student guide (`docs/workshop/guide/`) to time blocks, places breaks, and leaves buffer. It's for facilitators and is not part of the student repo.
+
+## Before Day 1 (facilitator checklist)
+
+- [ ] The student repo is **public**, so students can fork it.
+- [ ] Everything students need is on its **default branch** (`main`). A fork copies only that branch.
+- [ ] You forked the student repo yourself, ran `npm install` and `npm run dev`, and deployed it to a fresh Vercel project. The catalog shows the three sample listings.
+- [ ] You have the student repo link ready to share (slides, chat, or a short link).
+- [ ] Before Day 2: run Part 3 once on a brand-new Supabase project, to confirm `db/setup.sql` runs cleanly and the menu names in the guide still match Supabase.
 
 ## Ground rules that protect the clock
 
-- **Prerequisites are done before Day 1.** Accounts (GitHub/Supabase/Vercel) and installs (Node/VS Code/Git) are not class time. Verify them in the first 10 minutes, don't perform them. See [Prerequisites](./Prerequisites.md).
+- **Prerequisites are done before Day 1.** Accounts (GitHub/Supabase/Vercel) and installs (Node/VS Code/Git) are not class time. Verify them in the first 10 minutes, don't perform them. See [Prerequisites](./guide/Prerequisites.md).
 - **Two breaks per day** (about 10 min each), plus a start buffer and a wrap buffer.
 - **Checkpoints are hard stops.** If most of the room isn't at the checkpoint, use buffer time before moving on.
 - **Session 2 is the tight one** (provisioning a backend). It has the least slack, so guard it.
@@ -28,27 +36,27 @@ Working time is about **160 min/day** (50+60+50), with 30 min of structured non-
 
 ## Day 1: Build the Storefront
 
-Maps to [Session 1 Reference](./Session-1-Setup-Reference.md). Goal: a live, personalized catalog on the student's own Vercel URL.
+Maps to [Part 2: Build the Storefront](./guide/Part-2-Build-the-Storefront.md). Goal: a live, personalized catalog on the student's own Vercel URL.
 
 | Time | Activity | Doc step |
 |------|----------|----------|
 | 12:30 to 12:40 | Arrival. Confirm GitHub login works, `node -v` and `git --version` pass | Prereqs check |
 | 12:40 to 1:00 | Welcome and three-tier architecture overview (keep to 20 min) |  |
-| 1:00 to 1:30 | Fork, clone, run locally (`npm install`, `npm run dev`) | Steps 1 to 2 |
+| 1:00 to 1:30 | Fork, clone, run locally (`npm install`, `npm run dev`) | Steps 1 to 5 |
 | 1:30 to 1:40 | **Break 1** |  |
-| 1:40 to 2:20 | Deploy to own Vercel. Get live URL | Step 3 |
-| 2:20 to 2:40 | Customize landing page (`content/site.ts`) | Step 4 |
+| 1:40 to 2:20 | Deploy to own Vercel. Get live URL | Step 6 |
+| 2:20 to 2:40 | Customize landing page (`content/site.ts`) | Step 7 |
 | 2:40 to 2:50 | **Break 2** |  |
-| 2:50 to 3:40 | Customize catalog (`content/listings.ts` and `public/images/`) | Step 5 |
+| 2:50 to 3:40 | Customize catalog (`content/listings.ts` and `public/images/`). Push with `git add`, `git commit`, `git push` | Steps 8 to 9, Phase 5 |
 | 3:40 to 4:00 | **Checkpoint:** catalog and forms render on live URL. Q&A | Session 1 checklist |
 
-**Risk and buffer:** the `npm install` and first local run is the most likely snag (Node path issues). If it runs long, trim the architecture talk and borrow from the wrap block. Deployment is usually smooth since Vercel auto-detects Next.js.
+**Risk and buffer:** the `npm install` and first local run is the most likely snag. Watch for Windows PowerShell's "running scripts is disabled" error (one-line fix in Troubleshooting) and for students who can't find their cloned folder (have them use **File -> Open Folder**). The first `git push` asks for a GitHub sign-in, so allow a few minutes for that in the catalog block. A red error screen after editing a content file almost always means a deleted quote or comma. If it runs long, trim the architecture talk and borrow from the wrap block. Deployment is usually smooth since Vercel auto-detects Next.js.
 
 ---
 
 ## Day 2: Make It Real (Provision Your Backend) ⚠️ tightest day
 
-Maps to [Session 2 Reference](./Session-2-Setup-Reference.md). Goal: the student's own Supabase backend connected, with a test inquiry, receipt, and donation persisting. This day has the most steps and the least slack.
+Maps to [Part 3: Provision Your Backend](./guide/Part-3-Provision-Your-Backend.md). Goal: the student's own Supabase backend connected, with a test inquiry, receipt, and donation persisting. This day has the most steps and the least slack.
 
 | Time | Activity | Doc step |
 |------|----------|----------|
@@ -72,19 +80,19 @@ Maps to [Session 2 Reference](./Session-2-Setup-Reference.md). Goal: the student
 
 ## Day 3: Operate the Business
 
-Maps to [Session 3 Reference](./Session-3-Setup-Reference.md). Goal: seed own roles, run every dashboard, final deploy.
+Maps to [Part 4: Operate the Business](./guide/Part-4-Operate-the-Business.md). Goal: set up Admin and Staff accounts, run every dashboard, final deploy.
 
 | Time | Activity | Doc step |
 |------|----------|----------|
 | 12:30 to 12:40 | Arrival. Help any Day 2 backend stragglers catch up |  |
-| 12:40 to 1:10 | Register 3 accounts on live site. Run `db/seed-roles.sql` to set Admin/Staff | Step 1 |
+| 12:40 to 1:10 | Register admin and staff accounts on live site. Run `db/seed-roles.sql` | Step 1 |
 | 1:10 to 1:30 | Inquiry triage dashboard | Step 2 |
 | 1:30 to 1:40 | **Break 1** |  |
 | 1:40 to 2:20 | Receipt review: approve to MEMBER, reject with reason | Step 3 |
 | 2:20 to 2:40 | Donation review: verify and reject | Step 4 |
 | 2:40 to 2:50 | **Break 2** |  |
 | 2:50 to 3:20 | Admin: manage listings and assign roles | Step 5 |
-| 3:20 to 3:35 | Security demo: 403 / RLS blocks access | Step 6 |
+| 3:20 to 3:35 | Security demo: website blocks a User (6a), then the database blocks an anonymous query in the SQL Editor (6b) | Step 6 |
 | 3:35 to 4:00 | Final deploy. Showcase classmates' sites. Wrap | Step 7 |
 
 **Risk and buffer:** role seeding is the one setup step. Everything after is operating finished UI, so it moves quickly. The security demo (Step 6) is the signature teaching moment, so protect at least 15 min for it even if earlier blocks slip.

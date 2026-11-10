@@ -26,6 +26,6 @@ You do not build any of this from scratch. The project is already written for yo
 | Prereqs | Create accounts, install tools, prep a GCash QR | A laptop that is ready to build |
 | 1 | Fork, run, deploy, and customize your catalog | A live, personalized website at your own URL |
 | 2 | Create your database, connect your keys, add your GCash QR | Sign-in works, and forms save real inquiries, receipts, and donations |
-| 3 | Seed your roles, operate the dashboards, final deploy | A working site you fully own and can run |
+| 3 | Set up Admin and Staff accounts, operate the dashboards, final deploy | A working site you fully own and can run |
 
 > A note on screenshots: this guide uses placeholders like `![screenshot](./images/...)`. Your facilitator will add the real screenshots, or you can follow the written steps as they are. The words alone are enough to finish each step.

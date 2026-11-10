@@ -13,13 +13,13 @@ In this final session you create your own staff accounts, use the dashboards to 
 
 ## Session 3 checklist
 
-- [ ] Seeded your own Admin, Staff, and User accounts
+- [ ] Set up your own Admin and Staff accounts
 - [ ] Triaged an inquiry in the dashboard
 - [ ] Approved a receipt (a user became a MEMBER)
 - [ ] Rejected a receipt with a reason
 - [ ] Verified a donation and rejected another
 - [ ] Managed a listing and changed someone's role
-- [ ] Saw the security rules block a non-staff account
+- [ ] Saw the website block a non-staff account, and saw the database block it too
 - [ ] Pushed final changes and confirmed your live site updated
 
 ---
@@ -28,7 +28,7 @@ In this final session you create your own staff accounts, use the dashboards to 
 
 **What this does:** gives you a login for each role, so you can see every dashboard. Every new account starts as a regular user. This step promotes two new accounts to Admin and Staff. Your two test accounts from Session 2 stay regular users.
 
-**Order matters. Register first, then promote.**
+Order matters: register the accounts first, then promote them.
 
 1. On your **live site**, click **Sign in**, choose **Create account**, and register two more accounts: one for your admin (for example `you+admin@gmail.com`) and one for your staff (for example `you+staff@gmail.com`). Sign out between them.
 
@@ -52,11 +52,12 @@ update public.profiles
 4. Replace `admin@example.com` and `staff@example.com` with the two emails you just registered. Type them exactly as you registered them.
 5. Copy the whole file into the Supabase query box and click **Run**.
 6. The script ends with a check that lists each account and its role. Confirm your admin shows `ADMIN`, your staff shows `STAFF`, and your two test accounts show `USER`.
-7. On your site, sign out and sign back in as your admin. A **Dashboards** link now appears in the menu. It only shows for Staff and Admin.
 
    ![screenshot: roles confirmed in the result](./images/s3-roles-confirmed.png)
 
-> Register the accounts BEFORE running the script. The script only promotes accounts that already exist.
+7. On your site, sign out and sign back in as your admin. A **Dashboards** link now appears in the menu. It only shows for Staff and Admin.
+
+> If a role still shows `USER`, the email in the script did not match exactly. The script only promotes accounts that already exist. Fix the email and run it again.
 
 - [ ] You have one Admin, one Staff, and two User accounts
 
@@ -85,7 +86,7 @@ This is where a pending payment becomes a real membership.
 2. Click **View receipt** on the first one to see the image. The link stops working after about five minutes.
 3. Click **Approve**. That account's membership changes to **MEMBER**.
 4. On the second receipt, click **Reject**, type a short reason (for example "Image is blurry"), and click **Confirm rejection**.
-5. Sign in as your first test account and open **Membership**. It now shows that you are a member.
+5. Click **Sign out**, then sign in as your first test account and open **Membership**. It now shows that you are a member.
 
    ![screenshot: receipt review with Approve and Reject](./images/s3-receipts.png)
 
@@ -125,17 +126,46 @@ These two dashboards only show for your **Admin** account.
 
 ## Step 6: See the security in action
 
-This is the signature lesson of the whole workshop. The database protects your data even if someone gets past the buttons.
+This is the signature lesson of the whole workshop. Your data has two guards. The website checks who you are, and the database checks again on its own. You will see both.
+
+### 6a. The website blocks you
 
 1. Sign in as a plain **User** account. The **Dashboards** link is gone from the menu.
 2. Type the dashboard address by hand: add `/admin/receipts` to the end of your site's address and press Enter.
 3. You are blocked with "You don't have access to this page". (Signed out, you see "Sign in to continue" instead.)
 
-   ![screenshot: 403 access denied page](./images/s3-403.png)
+   ![screenshot: access denied page](./images/s3-403.png)
 
-> Why this matters: even if someone hid the dashboard buttons or typed the address by hand, the database security rules (RLS) still refuse to hand over data they are not allowed to see. Protection lives in the database, not just in the screen.
+That block came from the website's own code. But the website is not the last line of defense. Someone could skip your website entirely and ask your database directly, because the publishable key is public.
 
-- [ ] A non-staff account was blocked from a privileged page
+### 6b. The database blocks you too
+
+Now you ask the database the same question twice: once as yourself, the owner, and once as an anonymous visitor.
+
+1. In Supabase, open the **SQL Editor** and click **New query**.
+2. Paste this and click **Run**:
+
+```sql
+select count(*) as donations_seen from public.donations;
+```
+
+   You see `2`, your two test donations. The SQL Editor runs as the owner of the database, who can see everything.
+
+3. Replace it with this and click **Run** again:
+
+```sql
+set local role anon;
+select count(*) as donations_seen from public.donations;
+```
+
+   The first line tells the database "answer this one as an anonymous visitor". Now you see `0`.
+
+Same table, same question, different answer. Nothing on the website was involved. The RLS rules inside the database decided that a visitor sees no donations. The change only lasts for that one run, so your SQL Editor is back to normal afterward.
+
+> Why this matters: buttons can be hidden and pages can be skipped, but the database rules still apply to every request. That is why the real protection lives in the database, not just in the screen.
+
+- [ ] A non-staff account was blocked from a dashboard page
+- [ ] The same database question returned `2` as the owner and `0` as a visitor
 
 ---
 

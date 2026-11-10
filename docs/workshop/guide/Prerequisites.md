@@ -31,7 +31,7 @@ Tick each box as you finish its section below.
 - [ ] Supabase account created (signed in with GitHub)
 - [ ] Vercel account created (signed in with GitHub)
 - [ ] A GCash QR screenshot saved on your computer
-- [ ] You can open a terminal and run `node -v` and `git --version`
+- [ ] In the VS Code terminal, `node -v`, `npm -v`, and `git --version` all print version numbers
 
 ---
 
@@ -46,7 +46,9 @@ Tick each box as you finish its section below.
 
 ![screenshot: GitHub signup page](./images/prereq-github-signup.png)
 
-> Write down your username and password. You will sign in to Supabase and Vercel **with GitHub**, so this one account unlocks the other two.
+> Keep your username and password handy. You will sign in to Supabase and Vercel with GitHub, so this one account unlocks the other two.
+
+> If GitHub asks you to turn on two-factor authentication (a second check, like a code from an app on your phone), set it up now at home. Doing it in class can eat 15 minutes. The **GitHub Mobile** app is the easiest option.
 
 - [ ] GitHub account created and email verified
 
@@ -59,7 +61,7 @@ Tick each box as you finish its section below.
 > If someone already helped you install it, run the check in step 4 first. If you see version numbers, skip ahead.
 
 1. Go to [https://nodejs.org](https://nodejs.org).
-2. Click the **LTS** button (the one labeled "Recommended For Most Users").
+2. Download the version marked **LTS**. LTS means "long-term support", the stable version most people should use.
 3. Run the installer and accept the default options. On Windows, leave **"Add to PATH"** checked.
 4. Check that it worked. Open a terminal (Section 5 shows how) and type:
 
@@ -131,11 +133,27 @@ You will paste commands into a **terminal** throughout the workshop. A terminal 
 
 1. Open **VS Code**.
 2. In the top menu, choose **Terminal -> New Terminal**. (Shortcut: `` Ctrl+` `` on Windows, `` Cmd+` `` on macOS.)
-3. A panel opens at the bottom. Type `node -v` and press Enter to confirm it works.
+3. A panel opens at the bottom. Run these three commands one at a time, pressing Enter after each:
+
+```bash
+node -v
+npm -v
+git --version
+```
+
+Each one should print a version number.
+
+**Windows only: if `npm -v` shows a red error** that says "running scripts is disabled on this system", Windows is blocking a small helper file that npm needs. Run this once to allow it:
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+```
+
+If it asks a question, type `Y` and press Enter. Then run `npm -v` again. It now prints a version number. This only changes the setting for your own user account.
 
 > Any command block in this guide can be pasted into this terminal and run with Enter.
 
-- [ ] You can open a terminal and run a command
+- [ ] `node -v`, `npm -v`, and `git --version` all work in the VS Code terminal
 
 ---
 

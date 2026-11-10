@@ -53,31 +53,21 @@ In this session you get your own copy of the project, run it on your computer, p
 
 **What is cloning?** Cloning downloads your fork from GitHub onto your computer so you can open and edit it.
 
-1. Open **VS Code** and open a terminal (**Terminal -> New Terminal**).
-2. Move into the folder where you want to keep the project. For example, your Desktop:
-
-```bash
-cd Desktop
-```
-
-3. Clone your fork. Paste the link you copied, replacing the example below:
+1. Open **VS Code**. Open a terminal with **Terminal -> New Terminal**. It starts in your home folder (the folder with your computer username).
+2. Type `git clone`, a space, then paste the link you copied in Step 2. Press Enter. It looks like this, but with your own link:
 
 ```bash
 git clone https://github.com/your-username/your-fork.git
 ```
 
-VS Code downloads all the files into a new folder named after the project.
+   Git downloads the project into a new folder inside your home folder. The folder has the same name as your fork. That is the last part of the link, without `.git`.
 
-4. Move into that folder and open it in VS Code:
-
-```bash
-cd your-fork
-code .
-```
+3. In VS Code, choose **File -> Open Folder**. Go to your home folder, click the new project folder once, and click **Open** (on Windows the button says **Select Folder**).
+4. If VS Code asks whether you trust the authors of the files, click **Yes, I trust the authors**.
 
    ![screenshot: project open in VS Code](./images/s1-project-in-vscode.png)
 
-- [ ] The project files are open in VS Code
+- [ ] The project files show in the left sidebar of VS Code
 
 ---
 
@@ -87,13 +77,16 @@ code .
 
 **What is this?** The project depends on some ready-made code packages. This command downloads them. You only do it once.
 
-In the VS Code terminal, run:
+1. Open a new terminal with **Terminal -> New Terminal**. Because the project folder is open, the terminal starts inside it.
+2. Run:
 
 ```bash
 npm install
 ```
 
-Wait for it to finish. It may take a minute and print a lot of text. That is normal.
+Wait for it to finish. It may take a minute and print a lot of text. Yellow lines that say `npm warn` are normal. Only red `npm error` lines mean something went wrong.
+
+> On Windows, if you see "running scripts is disabled on this system", see [Troubleshooting](./Troubleshooting.md). It is a one-line fix.
 
 - [ ] `npm install` finished without red error text
 
@@ -111,7 +104,9 @@ The terminal prints a web address, usually `http://localhost:3000`. Hold Ctrl (o
 
    ![screenshot: site running at localhost:3000](./images/s1-localhost.png)
 
-You should see the landing page with a sample catalog. It shows the default "Acme Consulting" branding for now. You will change that soon.
+You should see the landing page with the default "Acme Consulting" branding. You will change that soon. Click **Browse the catalog** to see three sample listings.
+
+> On Windows, a "Windows Security" box may ask whether to allow Node.js on your network. Either choice is fine for this workshop. Click **Allow** if you are not sure.
 
 > Open a listing and you will see its contact form with a note that it starts saving after Session 2. That is expected. There is no database yet.
 
@@ -151,9 +146,19 @@ You should see the landing page with a sample catalog. It shows the default "Acm
 
 ## Phase 4: Make it yours
 
-You customize the site by editing just three files in the `content` folder. You do not need to touch anything else.
+You customize the site by editing files in the `content` folder and adding your own pictures. Today you change two files. You do not need to touch anything outside `content` and `public/images`.
 
-> After each edit, **save the file** (`Ctrl+S` or `Cmd+S`). If your local site is running, refresh your browser to see the change right away.
+> After each edit, save the file (`Ctrl+S` or `Cmd+S`). If your local site is running, refresh your browser to see the change right away.
+
+### How to edit these files without breaking them
+
+These files are code, so a few characters matter:
+
+- Change only the words between the double quotes `" "`.
+- Keep the quotes, the comma at the end of each line, and the `+` that joins long text across lines.
+- Apostrophes are fine (`"We're open"`). A double quote inside your text is not. Use single quotes instead (`"Our 'quick start' plan"`).
+
+If your page turns into a red error screen after you save, you probably deleted a quote or a comma. Press `Ctrl+Z` (`Cmd+Z` on Mac) to undo, save again, and the page comes back. The error screen also names the file and line number to check.
 
 ### Step 7: Customize your landing page (`content/site.ts`)
 
@@ -206,7 +211,7 @@ export const site: SiteContent = {
 3. For each item, change these values:
    - `title`: the name of the service.
    - `description`: a short explanation.
-   - `category`: pick one of `CONSULTING`, `WEB_DEV`, or `CUSTOM_SOFTWARE`. Keep the quotes and the exact spelling in capitals.
+   - `category`: pick one of `CONSULTING`, `WEB_DEV`, or `CUSTOM_SOFTWARE`. Keep the quotes and the exact spelling in capitals. These three are fixed because the database only accepts these values. Pick the closest one. Your title and description can say anything.
    - `inquiry_type`: pick one of `DEMO`, `QUOTE`, or `INQUIRE`. This decides which contact form shows on that listing's page.
    - `image_url`: the picture for the card (see Step 9).
    - `slug`: the short name used in the page address, for example `/catalog/my-new-service`. Use lowercase words joined by dashes. Keep it unique.
@@ -219,14 +224,21 @@ export const site: SiteContent = {
 
 ### Step 9: Add your own images
 
-1. Put your image files into the `public/images/` folder in the project.
-2. In `content/listings.ts`, set each `image_url` to the path of your file under `/images/`. For example, if you added `public/images/my-service.png`, set:
+1. Name your image files with lowercase letters, numbers, and dashes only. No spaces. For example `my-service.png`.
+2. Put them into the `public/images/` folder in the project. You can drag them onto that folder in the VS Code sidebar.
+3. In `content/listings.ts`, set each `image_url` to the path of your file under `/images/`. For example, if you added `public/images/my-service.png`, set:
 
 ```ts
 image_url: "/images/my-service.png",
 ```
 
-3. Save and refresh. Your pictures appear on the cards.
+4. Save and refresh. Your pictures appear on the cards.
+
+> Type the file name exactly, including the ending (`.png` or `.jpg`). Your computer may forgive a capital letter, but your live site will not, so the picture would show at home and be missing online.
+
+> Wide pictures work best. The card shows them at a 16:10 shape (for example 1600 by 1000 pixels) and trims anything outside that.
+
+> Can't see `.png` or `.jpg` at the end of your file names on Windows? Turn them on in File Explorer: **View -> Show -> File name extensions** (on Windows 10: **View -> File name extensions**).
 
 > The project ships with placeholder images like `/images/placeholder-consulting.svg`. You can keep those for now and replace them later.
 
@@ -236,21 +248,27 @@ image_url: "/images/my-service.png",
 
 ## Phase 5: Save your work and publish it
 
-So far your changes are only on your computer. Now you push them to GitHub, which tells Vercel to republish your live site.
+So far your changes are only on your computer. Now you send them to GitHub, which tells Vercel to republish your live site.
 
-1. In the VS Code terminal, make sure you are inside your project folder. Then stage your changes:
+This takes three Git commands. Think of mailing a package:
+
+- `git add` puts your changed files in the box (Git calls this "staging").
+- `git commit` seals the box and writes a label saying what is inside. The saved box is called a "commit".
+- `git push` sends the box to GitHub.
+
+1. In the VS Code terminal (it should already be inside your project folder), put your changes in the box:
 
 ```bash
 git add .
 ```
 
-2. Save them with a short message describing what you did:
+2. Seal it with a short label describing what you did:
 
 ```bash
 git commit -m "Customize branding and catalog"
 ```
 
-3. Push them to your GitHub fork:
+3. Send it to your GitHub fork:
 
 ```bash
 git push

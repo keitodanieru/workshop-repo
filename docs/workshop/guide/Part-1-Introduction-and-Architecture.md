@@ -12,10 +12,10 @@ You will not write this from scratch. The project is already built. You get your
 
 The whole thing uses four building blocks:
 
-- **Next.js**: the website framework. It builds both the pages people see and the behind-the-scenes code that handles their requests.
-- **Supabase**: your backend. It is your database (the thing that remembers data), your login system, and your file storage, all in one.
+- **Next.js**: the website framework (a ready-made toolkit for building websites). It builds both the pages people see and the behind-the-scenes code that handles their requests.
+- **Supabase**: your backend, meaning the behind-the-scenes part visitors never see. It is your database (the thing that remembers data), your login system, and your file storage, all in one.
 - **Vercel**: the hosting service that puts your site on the internet with a public web address.
-- **GitHub**: where your code lives online and which triggers a new deploy every time you push a change.
+- **GitHub**: where your code lives online. Every time you push (upload) a change to GitHub, Vercel publishes a fresh copy of your site.
 
 ---
 
@@ -31,7 +31,7 @@ You edit a few files on your computer in VS Code, then push them to GitHub. You 
 
 ### 2. Your project files
 
-The project is a Next.js app. You only ever change three content files to make the site yours:
+The project is a Next.js app. To make the site yours, you change three content files and add your own pictures to `public/images/`:
 
 - `content/site.ts`: the site name, headline, and intro text on the landing page.
 - `content/listings.ts`: your catalog items (title, description, category, and which inquiry form shows).
@@ -41,7 +41,7 @@ Everything else is already written for you.
 
 ### 3. GitHub repository
 
-Your code lives in your own copy (a "fork") on GitHub. GitHub keeps a history of every change. When you push a change, it tells Vercel to re-publish your site.
+A repository (or "repo") is a project's home on GitHub: all its files plus the history of every change. Your code lives in your own copy of the workshop repo, called a "fork". GitHub keeps a history of every change. When you push a change, it tells Vercel to re-publish your site.
 
 ### 4. Vercel (hosting)
 
@@ -53,7 +53,7 @@ Supabase is where your real data lives. It has three jobs:
 
 - **Database**: stores listings, inquiries, members, receipts, and donations.
 - **Authentication (login)**: lets people register and sign in.
-- **Storage**: holds uploaded payment receipt images in a private bucket.
+- **Storage**: holds uploaded payment receipt images in a private folder. Supabase calls a storage folder a "bucket".
 
 ### 6. Row Level Security (we will call it RLS)
 

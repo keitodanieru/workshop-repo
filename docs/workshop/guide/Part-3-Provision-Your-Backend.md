@@ -71,7 +71,7 @@ You will also turn on **Row Level Security** (we will call it RLS). RLS is the s
 
    ![screenshot: setup SQL ran successfully](./images/s2-setup-success.png)
 
-7. Open **Storage** in the left sidebar. You should see a bucket named `receipts`. It is private, which means nobody can open a receipt from a public link. Only Staff and Admin can view receipts, through a link that expires after a few minutes.
+7. Open **Storage** in the left sidebar. You should see a bucket (Supabase's word for a storage folder) named `receipts`. It is private, which means nobody can open a receipt from a public link. Only Staff and Admin can view receipts, through a link that expires after a few minutes.
 
 > If you see an error, the most common cause is copying only part of the file. Select the whole file and paste it again. The script is safe to run more than once.
 
@@ -171,7 +171,7 @@ SUPABASE_SERVICE_ROLE_KEY="sb_secret_..."
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `SUPABASE_SERVICE_ROLE_KEY`
-3. Save. Then go to the **Deployments** tab and redeploy the latest one so the new values take effect.
+3. Save. Then open the **Deployments** tab, click the **⋯** menu on the top deployment, choose **Redeploy**, and confirm. Vercel only reads new values when it builds, so this step matters.
 
 > Names are case-sensitive. Copy them exactly, including the `NEXT_PUBLIC_` part where shown.
 
@@ -183,8 +183,8 @@ SUPABASE_SERVICE_ROLE_KEY="sb_secret_..."
 
 **What this does:** shows your QR code on the **Membership** and **Donate** pages so people know where to pay.
 
-1. Copy the GCash QR image you saved before Session 1 into your project's `public/images/` folder.
-2. Rename it to exactly `gcash-qr.png`.
+1. Copy the GCash QR image you saved before Session 1 into your project's `public/images/` folder. You can drag it onto that folder in the VS Code sidebar.
+2. Rename it to exactly `gcash-qr.png` (right-click it in VS Code and choose **Rename**). VS Code always shows the full name, so you can check that it does not end in `.png.png`.
 3. Open `content/payment.ts` and change these values:
    - `label`: the line above the QR, for example "Scan to pay via GCash".
    - `accountName`: the name shown under the QR.
@@ -221,6 +221,10 @@ Now test that data really saves. You will also use this data in Session 3, so cr
 - [ ] One inquiry, two receipts (from two accounts), and two donations saved to your database
 
 ---
+
+## Before Session 3
+
+Free Supabase projects go to sleep (Supabase calls it "paused") after about a week with no activity. If Session 3 is more than a few days away, open your live site once in between. If your project does pause, open it in Supabase and click **Restore project**. It takes a few minutes.
 
 ## Session 2 done
 
