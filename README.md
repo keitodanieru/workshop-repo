@@ -1,41 +1,45 @@
-# POS Catalog Site — Core (Workshop Build)
+# Workshop Catalog Site
 
-A single **Next.js (App Router, TypeScript)** application deployed on **Vercel**,
-with **Supabase** as the backend (added in later tasks). This commit is the
-Session-1 scaffold: landing page, shared navigation, catalog/auth placeholders,
-base styling, and the three editable content files.
+This is the project you will build on in the three-session web workshop. It is a working website with a public catalog, contact forms, memberships paid by GCash, donations, and Staff and Admin dashboards.
 
-## The only files you customize
+You do not need to write this code. You will make your own copy, put it online, change a few files to make it yours, and connect your own database.
 
-| File | What it controls |
-|------|------------------|
-| `content/site.ts` | Site name, headline, intro/branding copy (landing page) |
-| `content/listings.ts` | Catalog items: title, category, description, inquiry type, image |
-| `content/payment.ts` | GCash QR payment label/config |
+## Start here
 
-Listing images live in `public/images/` and are referenced by a site-relative
-`image_url` under `/images/`.
+Open the step-by-step guide: **[docs/workshop/guide/README.md](docs/workshop/guide/README.md)**
 
-## Run locally
+Do the [Prerequisites](docs/workshop/guide/Prerequisites.md) at home before Session 1.
+
+## The files you will change
+
+| File | What it controls | When |
+|------|------------------|------|
+| `content/site.ts` | Your site name, headline, and intro text | Session 1 |
+| `content/listings.ts` | The services in your catalog | Session 1 |
+| `public/images/` | The pictures on your catalog cards | Session 1 |
+| `content/payment.ts` | Your GCash payment details | Session 2 |
+| `public/images/gcash-qr.png` | Your GCash QR code picture | Session 2 |
+
+Everything else is already built for you. You can look around, but you do not need to change it.
+
+## Run it on your computer
 
 ```bash
 npm install
-npm run dev     # http://localhost:3000
+npm run dev
 ```
 
-## Build
+Then open [http://localhost:3000](http://localhost:3000) in your browser.
 
-```bash
-npm run build
-```
+## What is in this project
 
-## Deploy
+| Folder | What is inside |
+|--------|----------------|
+| `content/` | The text and settings you customize |
+| `public/images/` | Pictures used on the site |
+| `app/` | The pages and the server code |
+| `lib/` | Shared helpers the pages use |
+| `db/` | The SQL files you run in Supabase in Sessions 2 and 3 |
+| `docs/workshop/guide/` | The workshop guide |
 
-Connect the repo to a Vercel project. Pushing to `main` auto-deploys over HTTPS.
-Vercel auto-detects Next.js — no extra configuration is required.
-
-## Routes in this scaffold
-
-- `/` — landing page (renders from `content/site.ts`)
-- `/catalog` — catalog placeholder (renders from `content/listings.ts`)
-- `/login` — auth placeholder (real auth added in a later session)
+Built with Next.js, Supabase, and Vercel.

@@ -1,14 +1,18 @@
 /**
- * payment.ts — EDITABLE CONTENT FILE (students customize this)
+ * payment.ts: YOUR GCASH PAYMENT DETAILS (you edit this file in Session 2)
  *
- * Configure the GCash QR payment details shown on the membership and donation
- * screens. In a later session you will save your own GCash QR image as
- * `public/images/gcash-qr.png` and set the label and account name here.
+ * These show on the Membership and Donate pages, next to your QR code.
+ * Save your GCash QR picture as public/images/gcash-qr.png, then change the
+ * label, account name, and instructions below.
  *
- * This is one of only three files you need to edit:
- *   - content/site.ts      ← branding + landing copy
- *   - content/listings.ts  ← your catalog items
- *   - content/payment.ts   ← this file (GCash payment label/config)
+ * Editing tips (so the file keeps working):
+ *   - Change only the words between the double quotes " ".
+ *   - Keep the quotes, the comma at the end of each line, and the + that joins
+ *     long text across lines.
+ *   - Apostrophes are fine ("We're open"). For a quote inside your text, use
+ *     single quotes ("Our 'quick start' plan").
+ *   - Red error screen after saving? You probably deleted a quote or a comma.
+ *     Press Ctrl+Z (Cmd+Z on Mac), save, and it comes back.
  */
 
 export interface PaymentConfig {

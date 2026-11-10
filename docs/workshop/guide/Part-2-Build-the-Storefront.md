@@ -175,6 +175,8 @@ export const site: SiteContent = {
     "offer, then send us a demo request, a quote request, or a general inquiry. " +
     "No account needed to get in touch.",
   catalogCtaLabel: "Browse the catalog",
+  heroImage: "/images/home-hero.jpg",
+  heroImageAlt: "A team working together at a desk with laptops and notes",
 };
 ```
 
@@ -183,6 +185,8 @@ export const site: SiteContent = {
    - `tagline`: the one line under the headline.
    - `intro`: the longer paragraph describing what you offer.
    - `catalogCtaLabel`: the text on the button that links to your catalog.
+   - `heroImage`: the photo next to your headline. To use your own, put it in `public/images/` (lowercase name, no spaces) and set this to `"/images/your-photo.jpg"`. Any shape works, because the page crops it to fit. Set it to `""` to show no photo.
+   - `heroImageAlt`: a short description of your photo, like "Our team at work". Screen readers read it aloud for people who can't see the picture.
 
 3. Save the file and refresh your browser.
 

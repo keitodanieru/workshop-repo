@@ -1,19 +1,28 @@
 /**
- * listings.ts — EDITABLE CONTENT FILE (students customize this)
+ * listings.ts: YOUR CATALOG (you edit this file in Session 1)
  *
- * Edit the catalog items below: title, category, description, inquiry_type, and
- * the image. Drop a matching image into `public/images/` and point `image_url`
- * at it (a site-relative path under `/images/`). Save and view the catalog.
+ * Each { ... } block below is one card in your catalog. Change the values,
+ * add a block, or delete one. Put matching pictures in public/images/ and set
+ * image_url to "/images/your-file-name.png".
  *
- * NOTE: This file is the customizable catalog *content*. Once the Supabase
- * backend is connected in a later session, the live catalog is served from the
- * database via Row Level Security. These entries double as the seed data and as
- * the content students edit — they mirror the `listings` table shape.
+ * Before Session 2, the catalog shows these listings directly. In Session 2 you
+ * copy them into your database from the /setup page, and from then on the
+ * catalog reads from the database.
  *
  * Fields:
+ *   - slug:         short name used in the page address (lowercase-with-dashes)
  *   - category:     CONSULTING | WEB_DEV | CUSTOM_SOFTWARE
- *   - inquiry_type: DEMO | QUOTE | INQUIRE  (decides which inquiry form shows)
- *   - image_url:    a path under /images/ referencing a file in public/images/
+ *   - inquiry_type: DEMO | QUOTE | INQUIRE  (decides which contact form shows)
+ *   - image_url:    "/images/" + a file name in public/images/ (lowercase, exact)
+ *
+ * Editing tips (so the file keeps working):
+ *   - Change only the words between the double quotes " ".
+ *   - Keep the quotes, the comma at the end of each line, and the + that joins
+ *     long text across lines.
+ *   - Apostrophes are fine ("We're open"). For a quote inside your text, use
+ *     single quotes ("Our 'quick start' plan").
+ *   - Red error screen after saving? You probably deleted a quote or a comma.
+ *     Press Ctrl+Z (Cmd+Z on Mac), save, and it comes back.
  */
 
 export type ListingCategory = "CONSULTING" | "WEB_DEV" | "CUSTOM_SOFTWARE";
